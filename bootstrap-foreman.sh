@@ -85,7 +85,7 @@ done
 
 # install scap and cis puppet modules from github
 sudo git clone https://github.com/arildjensen/cis-puppet /etc/puppet/environments/production/modules/cis
-cd /etc/puppet/environments/production/modules && patch -p1 < /vagrant/cis.patch
+cd /etc/puppet/environments/production/modules/cis/ && patch -p1 < /vagrant/cis.patch
 
 sudo git clone https://github.com/theforeman/puppet-foreman_scap_client /etc/puppet/environments/production/modules/foreman_scap_client
 
