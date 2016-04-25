@@ -14,18 +14,19 @@ then
     echo "Puppet Agent $(puppet agent --version) is already installed. Moving on..."
 else
     echo "Puppet Agent $(puppet agent --version) installed. Replacing..."
-    
+
+    sudo yum -y install http://yum.theforeman.org/releases/1.9/el7/x86_64/foreman-release.rpm && \ # we need it for rubygem-foreman_scap_client
     sudo rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm && \
     sudo yum -y erase puppet-agent && \
     sudo rm -f /etc/yum.repos.d/puppetlabs-pc1.repo && \
     sudo yum clean all && \
-    sudo yum -y install puppet nano nmap-ncat
+    sudo yum -y install puppet nano nmap-ncat vim
 
     # Add agent section to /etc/puppet/puppet.conf
     # Easier to set run interval to 120s for testing (reset to 30m for normal use)
     # https://docs.puppetlabs.com/puppet/3.8/reference/config_about_settings.html
     echo "" | sudo tee --append /etc/puppet/puppet.conf 2> /dev/null && \
-    echo "    server = theforeman.example.com" | sudo tee --append /etc/puppet/puppet.conf 2> /dev/null && \
+    echo "    server = foreman.opensourceday.pl" | sudo tee --append /etc/puppet/puppet.conf 2> /dev/null && \
     echo "    runinterval = 120s" | sudo tee --append /etc/puppet/puppet.conf 2> /dev/null
 
     sudo service puppet stop
@@ -38,3 +39,7 @@ else
     # Alternative, run manually on each host, after provisioning is complete...
     #sudo puppet agent --test --waitforcert=60
 fi
+
+cat <<. >/etc/profile.d/pretend-redhat.sh
+export FACTER_operatingsystem=RedHat
+.

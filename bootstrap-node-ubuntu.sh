@@ -27,7 +27,7 @@ else
     # Add agent section to /etc/puppet/puppet.conf (set run interval to 120s for testing)
     echo "" | sudo tee --append /etc/puppet/puppet.conf 2> /dev/null && \
     echo "[agent]" | sudo tee --append /etc/puppet/puppet.conf 2> /dev/null && \
-    echo "server=theforeman.example.com" | sudo tee --append /etc/puppet/puppet.conf 2> /dev/null && \
+    echo "server=foreman.opensourceday.pl" | sudo tee --append /etc/puppet/puppet.conf 2> /dev/null && \
     echo "runinterval=30m" | sudo tee --append /etc/puppet/puppet.conf 2> /dev/null
 
     sudo service puppet stop

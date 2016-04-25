@@ -1,3 +1,7 @@
+## Open Source Day 2016
+
+This is Foreman Demo for Open Source Day 2016 Workshop. Please see details [here](http://opensourceday.pl/osd-2016/warsztaty/hardening-i-bezpieczenstwo) (in Polish).
+
 ### Installing Foreman and Puppet Agent on Multiple VMs Using Vagrant and VirtualBox
 Automatically install and configure Foreman, the open source infrastructure life-cycle management tool, and multiple Puppet Agent VMs using Vagrant and VirtualBox. Project is part of my blog post, [Installing Foreman and Puppet Agent on Multiple VMs Using Vagrant and VirtualBox](http://wp.me/p1RD28-1nb).
 

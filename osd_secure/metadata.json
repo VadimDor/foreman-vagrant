@@ -1,0 +1,14 @@
+{
+  "name": "asq-osd_secure",
+  "version": "0.1.0",
+  "author": "asq",
+  "summary": "This module helps to pass Draft PCI-DSS v3 Control Baseline for CentOS Linux 7",
+  "license": "Apache 2.0",
+  "source": "https://github.com/asquelt/foreman-vagrant/osd_secure",
+  "project_page": "http://opensourceday.pl/osd-2016/warsztaty/hardening-i-bezpieczenstwo",
+  "issues_url": "https://github.com/asquelt/foreman-vagrant/issues",
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
+  ]
+}
+

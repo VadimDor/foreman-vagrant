@@ -18,13 +18,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     config.vbguest.auto_update = true
     config.vbguest.iso_path = "http://download.virtualbox.org/virtualbox/%{version}/VBoxGuestAdditions_%{version}.iso"
-    
+
     config.vm.box = node_values[':box']
 
     config.hostmanager.enabled = true
     config.hostmanager.manage_host = true
     config.hostmanager.ignore_private_ip = false
     config.hostmanager.include_offline = true
+
+    config.ssh.forward_x11 = true
 
     config.vm.define node_name do |config|
       # configures all forwarding ports in JSON array

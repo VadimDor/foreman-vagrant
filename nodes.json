@@ -1,20 +1,20 @@
 {
   "nodes": {
-    "theforeman.example.com": {
+    "foreman.opensourceday.pl": {
       ":ip": "192.168.35.5",
       "ports": [],
       ":memory": 1024,
       ":box": "puppetlabs/centos-7.0-64-puppet",
       ":bootstrap": "bootstrap-foreman.sh"
     },
-    "agent01.example.com": {
+    "agent01.opensourceday.pl": {
       ":ip": "192.168.35.10",
       "ports": [],
       ":memory": 1024,
       ":box": "puppetlabs/centos-7.0-64-puppet",
       ":bootstrap": "bootstrap-node-rhel.sh"
     },
-    "agent02.example.com": {
+    "agent02.opensourceday.pl": {
       ":ip": "192.168.35.20",
       "ports": [],
       ":memory": 1024,

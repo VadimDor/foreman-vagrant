@@ -1,0 +1,96 @@
+Adjusting CIS module (1cd7a4e) to work with Centos 7 and PCI-DSS rules.
+
+diff -urN cis_orig/files/el6/etc/audit/auditd.conf cis/files/el6/etc/audit/auditd.conf
+--- cis_orig/files/el6/etc/audit/auditd.conf	2016-04-25 08:17:46.586107596 +0000
++++ cis/files/el6/etc/audit/auditd.conf	2016-04-25 10:20:18.534704114 +0000
+@@ -15,10 +15,12 @@
+ ##name = mydomain
+ max_log_file = 6 
+ space_left = 75
+-space_left_action = SYSLOG
++#space_left_action = SYSLOG
++space_left_action = email
+ action_mail_acct = root
+ admin_space_left = 50
+-admin_space_left_action = SUSPEND
++#admin_space_left_action = SUSPEND
++admin_space_left_action = single
+ disk_full_action = SUSPEND
+ disk_error_action = SUSPEND
+ ##tcp_listen_port = 
+@@ -32,5 +34,6 @@
+ 
+ 
+ ## Setting below is needed for CIS compliance
+-max_log_file_action = keep_logs
++#max_log_file_action = keep_logs
++max_log_file_action = rotate
+ ## (End of CIS compliance settings)
+diff -urN cis_orig/files/el6/etc/pam.d/system-auth-ac cis/files/el6/etc/pam.d/system-auth-ac
+--- cis_orig/files/el6/etc/pam.d/system-auth-ac	2016-04-25 08:17:46.586107596 +0000
++++ cis/files/el6/etc/pam.d/system-auth-ac	2016-04-25 10:42:08.392597799 +0000
+@@ -1,14 +1,17 @@
+ auth        required      pam_env.so
+-auth        sufficient    pam_unix.so nullok try_first_pass
++auth        required      pam_faillock.so preauth silent deny=6 unlock_time=1800 fail_interval=900
++auth        sufficient    pam_unix.so try_first_pass
++auth        [default=die] pam_faillock.so authfail deny=6 unlock_time=1800 fail_interval=900
+ auth        requisite     pam_succeed_if.so uid >= 500 quiet
+ auth        required      pam_deny.so
+ 
++account     required      pam_faillock.so
+ account     required      pam_unix.so
+ account     sufficient    pam_localuser.so
+ account     sufficient    pam_succeed_if.so uid < 500 quiet
+ account     required      pam_permit.so
+ 
+-password    sufficient    pam_unix.so sha512 shadow nullok try_first_pass use_authtok remember=5
++password    sufficient    pam_unix.so sha512 shadow try_first_pass use_authtok remember=5
+ password    requisite     pam_passwdqc.so min=disabled,disabled,16,12,8
+ 
+ session     optional      pam_keyinit.so revoke
+diff -urN cis_orig/files/el6/etc/yum.conf cis/files/el6/etc/yum.conf
+--- cis_orig/files/el6/etc/yum.conf	2016-04-25 08:17:46.586107596 +0000
++++ cis/files/el6/etc/yum.conf	2016-04-25 09:14:57.847697314 +0000
+@@ -3,7 +3,7 @@
+ keepcache=0
+ debuglevel=2
+ logfile=/var/log/yum.log
+-distroverpkg=redhat-release
++distroverpkg=centos-release
+ tolerant=1
+ exactarch=1
+ obsoletes=1
+diff -urN cis_orig/manifests/linuxcontrols/c0000.pp cis/manifests/linuxcontrols/c0000.pp
+--- cis_orig/manifests/linuxcontrols/c0000.pp	2016-04-25 08:17:46.595112095 +0000
++++ cis/manifests/linuxcontrols/c0000.pp	2016-04-25 09:23:35.875004838 +0000
+@@ -37,6 +37,8 @@
+ 
+   mount {'/dev/shm':
+     options => 'nodev,nosuid,noexec',
++    device  => 'tmpfs',
++    fstype  => 'tmpfs',
+   }
+ 
+   # 1.1.6
+diff -urN cis_orig/manifests/linuxcontrols/c0015.pp cis/manifests/linuxcontrols/c0015.pp
+--- cis_orig/manifests/linuxcontrols/c0015.pp	2016-04-25 08:17:46.601115102 +0000
++++ cis/manifests/linuxcontrols/c0015.pp	2016-04-25 09:20:59.379001424 +0000
+@@ -21,7 +21,7 @@
+ class cis::linuxcontrols::c0015 {
+ 
+     sysctl::value { 'fs.suid_dumpable': value => '0' }
+-    sysctl::value { 'kernel.exec-shield': value => '1' }
++    #sysctl::value { 'kernel.exec-shield': value => '1' }
+     sysctl::value { 'kernel.randomize_va_space': value => '2' }
+     sysctl::value { 'net.ipv4.conf.all.send_redirects': value => '0' }
+     sysctl::value { 'net.ipv4.conf.default.send_redirects': value => '0' }
+@@ -32,7 +32,7 @@
+     sysctl::value { 'net.ipv4.conf.default.accept_redirects': value => '0' }
+     sysctl::value { 'net.ipv4.conf.default.secure_redirects': value => '0' }
+     sysctl::value { 'net.ipv4.icmp_echo_ignore_broadcasts': value => '1' }
+-    sysctl::value { 'net.ipv4.icmp_ignore_bogus_error_messages': value => '1' }
++    #sysctl::value { 'net.ipv4.icmp_ignore_bogus_error_messages': value => '1' }
+     sysctl::value { 'net.ipv4.conf.all.rp_filter': value => '1' }
+     sysctl::value { 'net.ipv4.tcp_max_syn_backlog': value => '4096' }
+ }
