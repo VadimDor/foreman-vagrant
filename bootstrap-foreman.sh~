@@ -102,6 +102,3 @@ mkdir /root/logs
 # install gui
 sudo yum -y install scap-workbench xorg-x11-xauth dejavu-lgc-sans-fonts
 
-# we will showcase puppet by running it manually
-puppet resource service puppet ensure=stopped enable=false
-
